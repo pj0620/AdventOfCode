@@ -15,7 +15,7 @@ ex_inp = """....#.....
 with open('inp.txt', 'r') as f:
   r_inp = f.read()
 
-inp = ex_inp
+inp = r_inp
 
 board = [
   list(l)
@@ -36,9 +36,10 @@ for x in range(len(board)):
     break
 print(f"[PART 1] start: {(xp, yp, pos)=}")
 
+visited = set()
 total = 0
 while 0 <= xp < len(board) and 0 <= yp < len(board[0]):
-# while total < 4:
+  visited.add((xp, yp))
   xn, yn = xp, yp
   if pos == 0:
     xn -= 1
@@ -84,47 +85,40 @@ for x in range(len(board)):
       break
   if pos is not None:
     break
-print(f"[PART 2] start: {(xp, yp, pos)=} \n {board}")
+x_start, y_start, pos_start = xp, yp, pos
+
+def hits_loop(board_inp):
+  visited_2 = set()
+  xp, yp, pos = x_start, y_start, pos_start
+  while 0 <= xp < len(board_inp) and 0 <= yp < len(board_inp[0]):
+    if (xp, yp, pos) in visited_2:
+      return True
+    visited_2.add((xp, yp, pos))
+    xn, yn = xp, yp
+    if pos == 0:
+      xn -= 1
+    elif pos == 1:
+      yn += 1
+    elif pos == 2:
+      xn += 1
+    else:
+      yn -= 1
+    
+    if not (0 <= xn < len(board_inp)) or not (0 <= yn < len(board_inp[0])):
+      return False
+    
+    if board_inp[xn][yn] == '#':
+      pos = (pos + 1) % 4
+    else:
+      xp, yp = xn, yn
+  return False
 
 board_templ = deepcopy(board)
-board_templ[xp][yp] = '.'
-board_cur = deepcopy(board)
-total = 0
-res = []
-while True:
-  xn, yn = xp, yp
-  dxr, dyr = xp, yp
-  if pos == 0:
-    xn -= 1
-    dyr += 1
-  elif pos == 1:
-    yn += 1
-    dxr -= 1
-  elif pos == 2:
-    xn += 1
-    dyr -= 1
-  else:
-    yn -= 1
-    dxr += 1
-  
-  # break if out of map
-  if not (0 <= xn < len(board_cur)) or not (0 <= yn < len(board_cur[0])):
-    break
-  
-  print("\n".join(["".join(l) for l in board_cur]), end="\n\n")
-  xr, yr = xp, yp
-  while (0 <= xr < len(board_cur)) and (0 <= yr < len(board_cur[0])):
-    if board_cur[xr][yr] == directions[(pos + 1) % 4]:
-      res.append((xp, yp))
-    elif board_cur[xr][yr] == '#':
-      break
-    xr += dxr
-    yr += dyr
-  
-  next_v = board_cur[xn][yn]
-  if next_v == '#':
-    pos = (pos + 1) % 4
-  else:
-    board_cur[xp][yp] = directions[pos]
-    xp, yp = xn, yn
+board_templ[x_start][y_start] = '.'
+res = 0
+for x, y in visited:
+  board_templ[x][y] = "#"
+  if hits_loop(board_templ):
+    res += 1
+  board_templ[x][y] = "."
 print("PART2:", res)
