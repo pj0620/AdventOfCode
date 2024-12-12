@@ -38,6 +38,8 @@ def dp(x: List[int]) -> Generator[int, None, None]:
     for sub in dp(x[1:]):
       yield x[0] + sub
       yield x[0] * sub
+      
+      # remove for part 1
       yield int(str(sub) + str(x[0]))
 
 
