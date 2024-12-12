@@ -15,7 +15,7 @@ for i, x in enumerate(inp):
 print("")
 
 ################################
-# PART 1
+# PART 2
 ################################
 memory = list(int(x) for x in inp)
 r_start = len(memory) - 1
