@@ -19,7 +19,7 @@ cache = {}
 def dp(val, n):
   global cache
   if n == 0:
-    return [val]
+    return 1
   elif (val, n) in cache:
     return cache[(val, n)]
   
@@ -29,28 +29,28 @@ def dp(val, n):
     str_val = str(val)
     l_val = int(str_val[:len(str_val) // 2])
     r_val = int(str_val[len(str_val) // 2:])
-    l_list = dp(l_val, n - 1)
-    r_list = dp(r_val, n - 1)
-    res = l_list + r_list
+    l_count = dp(l_val, n - 1)
+    r_count = dp(r_val, n - 1)
+    res = l_count + r_count
   else:
     res = dp(2024 * val, n - 1)
   cache[(val, n)] = res
   return res
 
 
-final_part1 = []
+final_part1 = 0
 for x in inp.split(" "):
   final_part1 += dp(int(x), 25)
-print("part 1:", len(final_part1))
+print("part 1:", final_part1)
 
 #####################
 # PART 2
 #####################
 
-final_part2 = []
+final_part2 = 0
 for x in inp.split(" "):
   final_part2 += dp(int(x), 75)
-print("part 2:", len(final_part2))
+print("part 2:", final_part2)
 
 # nodes = list(range(2025))
 # graph = defaultdict(list)
