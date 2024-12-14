@@ -34,8 +34,7 @@ def dp(val, n):
     res = l_list + r_list
   else:
     res = dp(2024 * val, n - 1)
-  if val < 2025:
-    cache[(val, n)] = res
+  cache[(val, n)] = res
   return res
 
 
