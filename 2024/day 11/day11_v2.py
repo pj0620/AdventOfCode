@@ -15,6 +15,7 @@ cache = {}
 # PART 1
 #####################
 
+
 def dp(val, n):
   global cache
   if n == 0:
@@ -31,9 +32,10 @@ def dp(val, n):
     l_list = dp(l_val, n - 1)
     r_list = dp(r_val, n - 1)
     res = l_list + r_list
-    cache[(val, n)] = res
   else:
     res = dp(2024 * val, n - 1)
+  if val < 2025:
+    cache[(val, n)] = res
   return res
 
 
@@ -46,52 +48,57 @@ print("part 1:", len(final_part1))
 # PART 2
 #####################
 
-nodes = list(range(2025))
-graph = defaultdict(list)
-for n in nodes:
-  if n == 0:
-    graph[n].append((1, 1))
-  elif len(str(n)) % 2 == 0:
-    str_val = str(n)
-    l_val = int(str_val[:len(str_val) // 2])
-    r_val = int(str_val[len(str_val) // 2:])
-    graph[n].append((l_val, 1))
-    graph[n].append((r_val, 1))
-  else:
-    queue = [(n * 2024, 1)]
-    while queue:
-      cur_n, cur_steps = queue.pop(-1)
-      cur_str = str(cur_n)
-      if cur_n < 2025:
-        graph[n].append((cur_n, cur_steps))
-      elif len(cur_str) % 2 == 0:
-        l_val = int(cur_str[:len(cur_str) // 2])
-        r_val = int(cur_str[len(cur_str) // 2:])
-        queue.append((l_val, cur_steps + 1))
-        queue.append((r_val, cur_steps + 1))
-      else:
-        queue.append((2024 * cur_n, cur_steps + 1))
-print(graph)
+final_part2 = []
+for x in inp.split(" "):
+  final_part2 += dp(int(x), 75)
+print("part 2:", len(final_part2))
 
-tot_connections = 0
-for iter in range(75):
-  print("iter: ", iter)
-  for n_str in inp.split(" "):
-    n = n_str
-    print("n = ", n, " tot_connections = ", tot_connections)
-    new_connections = []
-    for nex_val, nex_steps in graph[n]:
-      if nex_steps >= 75:
-        new_connections.append((nex_val, nex_steps))
-        continue
-      for nex2_val, nex2_steps in graph[nex_val]:
-        if nex2_steps + nex_steps > 75:
-          continue
-        new_connections.append((nex2_val, nex2_steps + nex_steps))
-    tot_connections -= len(graph[n])
-    tot_connections += len(new_connections)
-    graph[n] = new_connections
-print(graph)
+# nodes = list(range(2025))
+# graph = defaultdict(list)
+# for n in nodes:
+#   if n == 0:
+#     graph[n].append((1, 1))
+#   elif len(str(n)) % 2 == 0:
+#     str_val = str(n)
+#     l_val = int(str_val[:len(str_val) // 2])
+#     r_val = int(str_val[len(str_val) // 2:])
+#     graph[n].append((l_val, 1))
+#     graph[n].append((r_val, 1))
+#   else:
+#     queue = [(n * 2024, 1)]
+#     while queue:
+#       cur_n, cur_steps = queue.pop(-1)
+#       cur_str = str(cur_n)
+#       if cur_n < 2025:
+#         graph[n].append((cur_n, cur_steps))
+#       elif len(cur_str) % 2 == 0:
+#         l_val = int(cur_str[:len(cur_str) // 2])
+#         r_val = int(cur_str[len(cur_str) // 2:])
+#         queue.append((l_val, cur_steps + 1))
+#         queue.append((r_val, cur_steps + 1))
+#       else:
+#         queue.append((2024 * cur_n, cur_steps + 1))
+# print(graph)
+#
+# tot_connections = 0
+# for iter in range(75):
+#   print("iter: ", iter)
+#   for n_str in inp.split(" "):
+#     n = n_str
+#     print("n = ", n, " tot_connections = ", tot_connections)
+#     new_connections = []
+#     for nex_val, nex_steps in graph[n]:
+#       if nex_steps >= 75:
+#         new_connections.append((nex_val, nex_steps))
+#         continue
+#       for nex2_val, nex2_steps in graph[nex_val]:
+#         if nex2_steps + nex_steps > 75:
+#           continue
+#         new_connections.append((nex2_val, nex2_steps + nex_steps))
+#     tot_connections -= len(graph[n])
+#     tot_connections += len(new_connections)
+#     graph[n] = new_connections
+# print(graph)
 
 # total_steps = []
 # for n in inp.split(" "):
